@@ -4,10 +4,11 @@
 
 [!["Buy Me A Coffee"](https://cdn.buymeacoffee.com/assets/img/home-page-v3/bmc-new-logo.png)](https://www.buymeacoffee.com/varunteja)
 
+Donate BTC, BNB (BSC Channel): 0x3e06b7918bc3a21ee3a98ffcf0610a65b106cae9
 
 ## Gives LINQ support to Firestore database.
 
-### Getting started: 
+### Getting started
 
 #### Define your C# Poco that matches the firestore document
 
