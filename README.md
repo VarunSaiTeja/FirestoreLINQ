@@ -52,6 +52,6 @@ public class QueryTest
 #### Here are supported Query Methods
 Any, Avg, Count, First, FirstOrDefault, Last, LastOrDefault, Max, MaxBy, Min, MinBy, OrderBy, OrderByDescending, Select, Single, SingleOrDefault, Skip, Sum, Take, Where
 
-Note: Where predicte with OR clause not yet supported.
+Note: Where predicate with OR clause not yet supported.
 
 More features coming soon.
