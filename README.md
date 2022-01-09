@@ -7,10 +7,11 @@
 
 ## Gives LINQ support to Firestore database.
 
-#### Getting started: 
-```csharp
+### Getting started: 
 
-//Define your C# Poco that matches the firestore document
+#### Define your C# Poco that matches the firestore document
+
+```csharp
 [FirestoreData]
 public class Student
 {
@@ -26,23 +27,25 @@ public class Student
     [FirestoreProperty]
     public int Age { get; set; }
 }
+````
 
+#### Add AsQuerable to Collection Reference
+```csharp
 public class QueryTest
 {
     FirestoreDb db;
-    
     QueryTest()
     {
-      db = new FirestoreDbBuilder
-      {
-          ProjectId = projectId,
-          JsonCredentials = "<<Path to JSON>>"
-      }.Build();
+        db = new FirestoreDbBuilder
+        {
+            ProjectId = <<Project ID>>,
+            JsonCredentials = "<<Path to JSON>>"
+        }.Build();
     }
-    
-    public GetMajors()
+
+    public void GetMajors()
     {
-      var majors = db.Collection("Students").AsQuerable<Student>().Where(s=> s.Age > 18).ToList();
+        var majors = db.Collection("Students").AsQuerable<Student>().Where(s => s.Age > 18).ToList();
     }
 }
 ```
