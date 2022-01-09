@@ -4,8 +4,6 @@
 
 [!["Buy Me A Coffee"](https://cdn.buymeacoffee.com/assets/img/home-page-v3/bmc-new-logo.png)](https://www.buymeacoffee.com/varunteja)
 
-!["Donate via Binance"](https://github.com/VarunSaiTeja/Hosting/raw/master/Binance%20Donate.jpg)
-
 ## Gives LINQ support to Firestore database.
 
 ### Getting started
