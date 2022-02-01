@@ -47,7 +47,7 @@ public class QueryTest
         var youngers = db.Collection("Students").AsQuerable<Student>()
                                                 .Where(s => s.Age >= 15 && s.Age <= 25).ToList();
         
-        //Above query will be executed in form of below query
+        //Above LINQ Expression will be executed in form of following firestore query
         var youngersTranslated = db.Collection("Students")
                                     .WhereGreaterThanOrEqualTo("Age", 15)
                                     .WhereLessThanOrEqualTo("Age", 25)
