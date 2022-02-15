@@ -15,7 +15,7 @@ namespace TestCases
             _db = db;
         }
 
-        DataType dataTypes = new()
+        public static DataType dataTypes = new()
         {
             Double = 77578.55,
             Float = 1.056f,
@@ -23,13 +23,6 @@ namespace TestCases
             LatLng = new Google.Type.LatLng() { Latitude = -45, Longitude = 120 },
             Bool = true
         };
-
-        [Fact]
-        public void MockData()
-        {
-            var rs = _db.firestoreDb.Collection("Types").Document("Test").SetAsync(dataTypes).Result;
-            Assert.NotNull(rs);
-        }
 
         [Fact]
         public void GetEntireType()
