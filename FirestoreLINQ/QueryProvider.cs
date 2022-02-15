@@ -33,6 +33,11 @@ namespace FirestoreLINQ
             throw new NotImplementedException();
         }
 
+        QuerySnapshot GetResult()
+        {
+            return query.GetSnapshotAsync().ConfigureAwait(false).GetAwaiter().GetResult();
+        }
+
         public TResult Execute<TResult>(Expression expression)
         {
             QueryResolver(expression);
@@ -44,63 +49,64 @@ namespace FirestoreLINQ
                 {
                     case "Any":
                         {
-                            var snapResult = query.Limit(1).GetSnapshotAsync().Result;
+                            query = query.Limit(1);
+                            var snapResult = GetResult();
                             return (TResult)(object)snapResult.Any();
                         }
                     case "Average" or "Sum":
                         {
-                            var snapResult = query.GetSnapshotAsync().Result;
+                            var snapResult = GetResult();
                             return GenericAggregator<TResult>.Aggregate(snapResult, me.Name);
                         }
                     case "Count":
                         {
-                            var snapResult = query.GetSnapshotAsync().Result;
+                            var snapResult = GetResult();
                             return (TResult)(object)snapResult.Count;
                         }
                     case "First":
                         {
                             query = query.Limit(1);
-                            var snapResult = query.GetSnapshotAsync().Result;
+                            var snapResult = GetResult();
                             return snapResult.First().ConvertTo<TResult>();
                         }
                     case "FirstOrDefault":
                         {
                             query = query.Limit(1);
-                            var snapResult = query.GetSnapshotAsync().Result;
+                            var snapResult = GetResult();
                             return snapResult.Any() ? snapResult.First().ConvertTo<TResult>() : default;
                         }
                     case "Last":
                         {
                             query = query.LimitToLast(1);
-                            var snapResult = query.GetSnapshotAsync().Result;
+                            var snapResult = GetResult();
                             return snapResult.Last().ConvertTo<TResult>();
                         }
                     case "LastOrDefault":
                         {
                             query = query.LimitToLast(1);
-                            var snapResult = query.GetSnapshotAsync().Result;
+                            var snapResult = GetResult();
                             return snapResult.Any() ? snapResult.First().ConvertTo<TResult>() : default;
                         }
                     case "Max" or "Min":
                         {
-                            var result = query.GetSnapshotAsync().Result.First().ConvertTo<Dictionary<string, TResult>>().Values.First();
+                            var result = GetResult().First().ConvertTo<Dictionary<string, TResult>>().Values.First();
                             return result;
                         }
                     case "MaxBy" or "MinBy":
                         {
-                            var results = query.GetSnapshotAsync().Result;
+                            var results = GetResult();
                             return results.Any() ? results[0].ConvertTo<TResult>() : default;
                         }
                     case "Single":
                         {
                             query = query.Limit(2);
-                            var snapResult = query.GetSnapshotAsync().Result;
+                            var snapResult = GetResult();
                             return snapResult.Single().ConvertTo<TResult>();
                         }
                     case "SingleOrDefault":
                         {
                             query = query.Limit(2);
-                            var snapResult = query.GetSnapshotAsync().Result;
+                            var snapResult = GetResult();
                             return snapResult.Any() ? snapResult.SingleOrDefault().ConvertTo<TResult>() : default;
                         }
                     default:
@@ -108,7 +114,7 @@ namespace FirestoreLINQ
                 }
             }
 
-            var snapshot = query.GetSnapshotAsync().Result;
+            var snapshot = GetResult();
 
             if (!snapshot.Any())
                 return default;
