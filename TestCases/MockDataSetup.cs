@@ -17,16 +17,14 @@ namespace TestCases
             _db = db;
         }
 
-        [Fact]
-        //[Fact(Skip = "Use this test only for mocking/inserting Types data in firestore, Run this test alone intially.")]
+        [Fact(Skip = "Use this test only for mocking/inserting Types data in firestore, Run this test alone intially.")]
         public void Setup_Types()
         {
             var rs = _db.firestoreDb.Collection<DataType>().Document("Test").SetAsync(DataTypeCases.dataTypes).Result;
             Assert.NotNull(rs);
         }
 
-        [Fact]
-        //[Fact(Skip = "Use this test only for mocking/inserting Students data in firestore, Run this test alone intially.")]
+        [Fact(Skip = "Use this test only for mocking/inserting Students data in firestore, Run this test alone intially.")]
         public void Setup_Students()
         {
             //Assert.Equal("Sai", firstNames[0]);
