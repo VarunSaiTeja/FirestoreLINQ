@@ -10,7 +10,7 @@ namespace TestCases
         public FirestoreDb firestoreDb;
         public MyDb()
         {
-            var firebaseSecret = "{Paste Base64 encoded firebase sdk JSON here}";
+            var firebaseSecret = "<--Convert your Firebase SDK JSON to base64 and paste it here-->";
             var firebaseJson = Encoding.UTF8.GetString(Convert.FromBase64String(firebaseSecret));
             var projectId = JsonConvert.DeserializeObject<dynamic>(firebaseJson).project_id;
 
