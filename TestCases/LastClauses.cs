@@ -19,11 +19,9 @@ namespace TestCases
         [Fact]
         public void Last_WithoutOrderBy()
         {
-            var ex = Assert.Throws<AggregateException>(() => students.Last());
-            var innerEx = ex.InnerExceptions.First();
+            var ex = Assert.Throws<InvalidOperationException>(() => students.Last());
 
-            Assert.Equal("InvalidOperationException", innerEx.GetType().Name);
-            Assert.Equal("Queries using LimitToLast must specify at least one ordering.", innerEx.Message);
+            Assert.Equal("Queries using LimitToLast must specify at least one ordering.", ex.Message);
         }
 
         [Fact]
