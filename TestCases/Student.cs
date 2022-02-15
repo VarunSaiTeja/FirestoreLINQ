@@ -3,7 +3,7 @@ using Google.Cloud.Firestore;
 using System.Collections.Generic;
 namespace TestCases
 {
-    [FirestoreData,FireStoreCollectionAttribute("Students")]
+    [FirestoreData,FirestoreCollection("Students")]
     public class Student
     {
         [FirestoreProperty]

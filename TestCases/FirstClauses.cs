@@ -9,7 +9,7 @@ namespace TestCases
     {
         private readonly MyDb _db;
 
-        private IQueryable<Student> students => _db.firestoreDb.Collection("Students").AsQuerable<Student>();
+        private IQueryable<Student> students => _db.firestoreDb.AsQuerable<Student>();
 
         public FirstClauses(MyDb db)
         {

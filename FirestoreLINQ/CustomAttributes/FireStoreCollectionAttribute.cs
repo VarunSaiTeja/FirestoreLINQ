@@ -4,19 +4,20 @@ using FirestoreLINQ.Internals;
 // ReSharper disable once CheckNamespace
 namespace FirestoreLINQ
 {
-    public class FireStoreCollectionAttribute : Attribute
+    [AttributeUsage(AttributeTargets.Class, Inherited = false, AllowMultiple = false)]
+    public class FirestoreCollectionAttribute : Attribute
     {
-        public string CollectionPath { get; set; }
+        public string CollectionName;
 
-        public FireStoreCollectionAttribute(string collectionPath)
+        public FirestoreCollectionAttribute(string collectionName)
         {
-            CollectionPath = collectionPath;
+            CollectionName = collectionName;
         }
-        internal static FireStoreCollectionAttribute GetAttributes(TypeInfo typeInfo)
+        internal static FirestoreCollectionAttribute GetAttributes(TypeInfo typeInfo)
         {
             return typeInfo.CustomAttributes
-                .Where(x => x.AttributeType == typeof(FireStoreCollectionAttribute))
-                .Select(x => (FireStoreCollectionAttribute)x.InflateAttribute())
+                .Where(x => x.AttributeType == typeof(FirestoreCollectionAttribute))
+                .Select(x => (FirestoreCollectionAttribute)x.InflateAttribute())
                 .FirstOrDefault();
         }
     }

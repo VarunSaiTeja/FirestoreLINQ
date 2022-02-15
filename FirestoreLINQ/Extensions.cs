@@ -12,17 +12,17 @@ namespace FirestoreLINQ
             return source;
         }
 
-        public static CollectionReference GetCollectionReference<T>(this FirestoreDb db) where T : class
+        public static CollectionReference Collection<T>(this FirestoreDb db) where T : class
         {
             TypeInfo typeInfo = typeof(T).GetTypeInfo();
-            FireStoreCollectionAttribute collectionAttribute = FireStoreCollectionAttribute.GetAttributes(typeInfo);
-            string collectionName = collectionAttribute?.CollectionPath ?? typeInfo.Name.ToLower();
+            FirestoreCollectionAttribute collectionAttribute = FirestoreCollectionAttribute.GetAttributes(typeInfo);
+            string collectionName = collectionAttribute?.CollectionName ?? typeInfo.Name.ToLower();
             return db.Collection(collectionName);
         }
 
         public static IQueryable<T> AsQuerable<T>(this FirestoreDb db) where T : class
         {
-            return db.GetCollectionReference<T>().AsQuerable<T>();
+            return db.Collection<T>().AsQuerable<T>();
         }
     }
 }
