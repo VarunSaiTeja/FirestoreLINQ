@@ -42,9 +42,17 @@ public class QueryTest
         }.Build();
     }
 
-    public void GetMajors()
+    public void GetYoungers()
     {
-        var majors = db.Collection("Students").AsQuerable<Student>().Where(s => s.Age > 18).ToList();
+        var youngers = db.Collection("Students").AsQuerable<Student>()
+                                                .Where(s => s.Age >= 15 && s.Age <= 25).ToList();
+        
+        //Above LINQ Expression will be executed in form of following firestore query
+        var youngersTranslated = db.Collection("Students")
+                                    .WhereGreaterThanOrEqualTo("Age", 15)
+                                    .WhereLessThanOrEqualTo("Age", 25)
+                                    .Select(x=> x.ConvertTo<Student>())
+                                    .ToList();
     }
 }
 ```
