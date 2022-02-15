@@ -1,9 +1,9 @@
-﻿using Google.Cloud.Firestore;
+﻿using FirestoreLINQ;
+using Google.Cloud.Firestore;
 using System.Collections.Generic;
-
 namespace TestCases
 {
-    [FirestoreData]
+    [FirestoreData,FireStoreCollectionAttribute("Students")]
     public class Student
     {
         [FirestoreProperty]
