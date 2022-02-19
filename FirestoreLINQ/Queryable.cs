@@ -8,7 +8,7 @@ namespace FirestoreLINQ
     {
         public Queryable(CollectionReference collection)
         {
-            this.Provider = new QueryProvider(collection); ;
+            this.Provider = new QueryProvider(collection);
             this.Expression = Expression.Constant(this);
         }
 

@@ -1,10 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using FirestoreLINQ;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using FirestoreLINQ;
-using Google.Apis.Util;
 using Xunit;
 
 namespace TestCases

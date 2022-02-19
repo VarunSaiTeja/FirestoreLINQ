@@ -1,6 +1,5 @@
 ﻿using Google.Cloud.Firestore;
 using System.Reflection;
-
 namespace FirestoreLINQ
 {
     public static class Extensions
@@ -15,7 +14,7 @@ namespace FirestoreLINQ
         {
             TypeInfo typeInfo = typeof(T).GetTypeInfo();
             var attrib = (FirestoreCollectionAttribute)Attribute.GetCustomAttributes(typeInfo).SingleOrDefault(x => x is FirestoreCollectionAttribute);
-            string collectionName = attrib?.CollectionName ?? typeInfo.Name.ToLower();
+            string collectionName = attrib?.CollectionName ?? Vocabularies.Default.Pluralize(typeInfo.Name);
             return db.Collection(collectionName);
         }
 

@@ -1,11 +1,11 @@
-﻿using Google.Cloud.Firestore;
+﻿using FirestoreLINQ;
+using Google.Cloud.Firestore;
 using Google.Type;
 using System;
-using FirestoreLINQ;
 
 namespace TestCases
 {
-    [FirestoreData,FirestoreCollection("Types")]
+    [FirestoreData, FirestoreCollection("Types")]
     public class DataType : IEquatable<DataType>
     {
         [FirestoreProperty]
