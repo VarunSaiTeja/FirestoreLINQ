@@ -1,6 +1,5 @@
 ﻿using Google.Cloud.Firestore;
 using System.Reflection;
-using FirestoreLINQ.Internals;
 
 namespace FirestoreLINQ
 {
@@ -15,8 +14,8 @@ namespace FirestoreLINQ
         public static CollectionReference Collection<T>(this FirestoreDb db) where T : class
         {
             TypeInfo typeInfo = typeof(T).GetTypeInfo();
-            FirestoreCollectionAttribute collectionAttribute = FirestoreCollectionAttribute.GetAttributes(typeInfo);
-            string collectionName = collectionAttribute?.CollectionName ?? typeInfo.Name.ToLower();
+            var attrib = (FirestoreCollectionAttribute)Attribute.GetCustomAttributes(typeInfo).SingleOrDefault(x => x is FirestoreCollectionAttribute);
+            string collectionName = attrib?.CollectionName ?? typeInfo.Name.ToLower();
             return db.Collection(collectionName);
         }
 

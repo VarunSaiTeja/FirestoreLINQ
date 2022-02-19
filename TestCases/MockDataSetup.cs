@@ -27,8 +27,6 @@ namespace TestCases
         [Fact(Skip = "Use this test only for mocking/inserting Students data in firestore, Run this test alone intially.")]
         public void Setup_Students()
         {
-            //Assert.Equal("Sai", firstNames[0]);
-            //Assert.Equal("Varun", firstNames[1]);
             var students = new List<Student>
             {
                 new Student
@@ -46,7 +44,7 @@ namespace TestCases
                         "Problem Solver",
                         "LINQ"
                     },
-                    Age=15
+                    Age = 15
                 },
                 new Student
                 {
@@ -63,7 +61,6 @@ namespace TestCases
             foreach (var student in students)
             {
                 var rs = _db.firestoreDb.Collection<Student>().AddAsync(student).Result;
-                //var rs = _db.firestoreDb.Collection("Students").AddAsync(student).Result;
                 Assert.NotNull(rs);
             }
         }
