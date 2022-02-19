@@ -11,6 +11,10 @@
 #### Define your C# Poco that matches the firestore document
 
 ```csharp
+/*Attribute FirestoreCollection is optional, 
+We will automatically pluralize the class name while creating CollectionReference.
+Student will be converted to Students when pluralized.*/
+
 [FirestoreData, FirestoreCollection("Students")]
 public class Student
 {
