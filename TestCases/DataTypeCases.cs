@@ -8,7 +8,7 @@ namespace TestCases
     {
         private readonly MyDb _db;
 
-        private IQueryable<DataType> types => _db.firestoreDb.Collection("Types").AsQuerable<DataType>();
+        private IQueryable<DataType> types => _db.firestoreDb.AsQuerable<DataType>();
 
         public DataTypeCases(MyDb db)
         {

@@ -11,7 +11,7 @@
 #### Define your C# Poco that matches the firestore document
 
 ```csharp
-[FirestoreData]
+[FirestoreData,FireStoreCollection("Students")]
 public class Student
 {
     [FirestoreProperty]
@@ -49,6 +49,12 @@ public class QueryTest
         
         //Above LINQ Expression will be executed in form of following firestore query
         var youngersTranslated = db.Collection("Students")
+                                    .WhereGreaterThanOrEqualTo("Age", 15)
+                                    .WhereLessThanOrEqualTo("Age", 25)
+                                    .Select(x=> x.ConvertTo<Student>())
+                                    .ToList();
+         //or with collection attribute
+         var youngersTranslated = db.AsQuerable<Student>()
                                     .WhereGreaterThanOrEqualTo("Age", 15)
                                     .WhereLessThanOrEqualTo("Age", 25)
                                     .Select(x=> x.ConvertTo<Student>())

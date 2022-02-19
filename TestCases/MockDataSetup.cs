@@ -10,7 +10,7 @@ namespace TestCases
     {
         private readonly MyDb _db;
 
-        private IQueryable<DataType> types => _db.firestoreDb.Collection("Types").AsQuerable<DataType>();
+        private IQueryable<DataType> types => _db.firestoreDb.AsQuerable<DataType>();
 
         public MockDataSetup(MyDb db)
         {
@@ -20,7 +20,7 @@ namespace TestCases
         [Fact(Skip = "Use this test only for mocking/inserting Types data in firestore, Run this test alone intially.")]
         public void Setup_Types()
         {
-            var rs = _db.firestoreDb.Collection("Types").Document("Test").SetAsync(DataTypeCases.dataTypes).Result;
+            var rs = _db.firestoreDb.Collection<DataType>().Document("Test").SetAsync(DataTypeCases.dataTypes).Result;
             Assert.NotNull(rs);
         }
 
@@ -62,7 +62,8 @@ namespace TestCases
             Console.WriteLine(students.Count);
             foreach (var student in students)
             {
-                var rs = _db.firestoreDb.Collection("Students").AddAsync(student).Result;
+                var rs = _db.firestoreDb.Collection<Student>().AddAsync(student).Result;
+                //var rs = _db.firestoreDb.Collection("Students").AddAsync(student).Result;
                 Assert.NotNull(rs);
             }
         }
