@@ -4,10 +4,10 @@ using Xunit;
 
 namespace TestCases
 {
-    public class FireStoreCollection : IClassFixture<MyDb>
+    public class FirestoreCollection : IClassFixture<MyDb>
     {
         private readonly MyDb _db;
-        public FireStoreCollection(MyDb db)
+        public FirestoreCollection(MyDb db)
         {
             _db = db;
         }
