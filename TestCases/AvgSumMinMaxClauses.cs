@@ -71,7 +71,7 @@ namespace TestCases
         {
             var age = students.Where(x => x.LastName == "Darisi").Max(x => x.Age);
             var mockResult = students.Where(x => x.LastName == "Darisi").Max(x => x.Age);
-            
+
             Assert.Equal(mockResult, age);
         }
 
@@ -80,7 +80,7 @@ namespace TestCases
         {
             var student = students.MinBy(x => x.Age);
             var mockResult = students.MinBy(x => x.Age);
-            
+
             Assert.Equal(mockResult.FirstName, student.FirstName);
         }
 
@@ -89,7 +89,7 @@ namespace TestCases
         {
             var student = students.Where(x => x.LastName == "Teja").MinBy(x => x.Age);
             var mockResult = students.Where(x => x.LastName == "Teja").MinBy(x => x.Age);
-            
+
             Assert.Equal(mockResult.FirstName, student.FirstName);
         }
 
@@ -98,7 +98,7 @@ namespace TestCases
         {
             var student = students.Where(x => x.LastName == "Teja").MaxBy(x => x.Age);
             var mockResult = students.Where(x => x.LastName == "Teja").MaxBy(x => x.Age);
-            
+
             Assert.Equal(mockResult.FirstName, student.FirstName);
         }
 

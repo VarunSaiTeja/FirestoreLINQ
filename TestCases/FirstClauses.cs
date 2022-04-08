@@ -39,7 +39,7 @@ namespace TestCases
         {
             var result = students.First(x => x.Age > 15);
             var mockResult = MockData.Students.First(x => x.Age > 15);
-            
+
             Assert.Equal(mockResult, result);
         }
 
@@ -65,7 +65,7 @@ namespace TestCases
             var result = students.FirstOrDefault(x => x.Age > 100);
             var mockResult = MockData.Students.FirstOrDefault(x => x.Age > 100);
 
-            Assert.Equal(mockResult,result);
+            Assert.Equal(mockResult, result);
         }
     }
 }

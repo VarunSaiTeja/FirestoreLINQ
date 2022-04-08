@@ -86,10 +86,10 @@ namespace TestCases
         [Fact]
         public void SingleOrDefault_Predicate_NoItem()
         {
-            var result=students.SingleOrDefault(x => x.Age > 100);
+            var result = students.SingleOrDefault(x => x.Age > 100);
             var mockResult = MockData.Students.SingleOrDefault(x => x.Age > 100);
-            
-            Assert.Equal(mockResult,result);
+
+            Assert.Equal(mockResult, result);
         }
     }
 }

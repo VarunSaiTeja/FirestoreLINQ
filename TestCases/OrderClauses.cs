@@ -66,7 +66,7 @@ namespace TestCases
             var results = students.OrderBy(x => x.LastName).ThenBy(x => x.Age).ToList();
             var mockResults = MockData.Students.OrderBy(x => x.LastName).ThenBy(x => x.Age).ToList();
 
-            Assert.Equal(mockResults,results);
+            Assert.Equal(mockResults, results);
         }
 
         [Fact]
@@ -75,7 +75,7 @@ namespace TestCases
             var results = students.OrderBy(x => x.LastName).ThenByDescending(x => x.Age).ToList();
             var mockResults = MockData.Students.OrderBy(x => x.LastName).ThenByDescending(x => x.Age).ToList();
 
-            Assert.Equal(mockResults,results);
+            Assert.Equal(mockResults, results);
         }
 
         [Fact]
@@ -84,7 +84,7 @@ namespace TestCases
             var results = students.OrderByDescending(x => x.LastName).ThenBy(x => x.Age).ToList();
             var mockResults = MockData.Students.OrderByDescending(x => x.LastName).ThenBy(x => x.Age).ToList();
 
-            Assert.Equal(mockResults,results);
+            Assert.Equal(mockResults, results);
         }
 
         [Fact]
@@ -92,8 +92,8 @@ namespace TestCases
         {
             var results = students.OrderByDescending(x => x.LastName).ThenByDescending(x => x.Age).ToList();
             var mockResults = MockData.Students.OrderByDescending(x => x.LastName).ThenByDescending(x => x.Age).ToList();
-            
-            Assert.Equal(mockResults,results);
+
+            Assert.Equal(mockResults, results);
         }
     }
 }

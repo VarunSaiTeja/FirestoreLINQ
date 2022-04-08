@@ -23,7 +23,7 @@ namespace TestCases
             var results = students.Where(x => x.Age == 25).ToList();
             var mockResults = MockData.Students.Where(x => x.Age == 25).ToList();
 
-            Assert.Equal(mockResults,results);
+            Assert.Equal(mockResults, results);
         }
 
         [Fact]
@@ -32,7 +32,7 @@ namespace TestCases
             var results = students.Where(x => x.Age != 25).ToList();
             var mockResults = MockData.Students.Where(x => x.Age != 25).ToList();
 
-            Assert.Equal(mockResults.Count,results.Count);
+            Assert.Equal(mockResults.Count, results.Count);
         }
 
         [Fact]
@@ -41,7 +41,7 @@ namespace TestCases
             var results = students.Where(x => x.Age > 25).ToList();
             var mockResults = MockData.Students.Where(x => x.Age > 25).ToList();
 
-            Assert.Equal(mockResults,results);
+            Assert.Equal(mockResults, results);
         }
 
         [Fact]
@@ -50,7 +50,7 @@ namespace TestCases
             var results = students.Where(x => x.Age >= 25).ToList();
             var mockResults = MockData.Students.Where(x => x.Age >= 25).ToList();
 
-            Assert.Equal(mockResults,results);
+            Assert.Equal(mockResults, results);
         }
 
         [Fact]
@@ -59,7 +59,7 @@ namespace TestCases
             var results = students.Where(x => x.Age < 25).ToList();
             var mockResults = MockData.Students.Where(x => x.Age < 25).ToList();
 
-            Assert.Equal(mockResults,results);
+            Assert.Equal(mockResults, results);
         }
 
 
@@ -69,16 +69,16 @@ namespace TestCases
             var results = students.Where(x => x.Age <= 25).ToList();
             var mockResults = MockData.Students.Where(x => x.Age <= 25).ToList();
 
-            Assert.Equal(mockResults.Count,results.Count);
+            Assert.Equal(mockResults.Count, results.Count);
         }
 
         [Fact]
         public void WhereArrayContains_Inline()
         {
             var results = students.Where(x => x.Skills.Contains("Problem Solver")).ToList();
-            var mockResults = MockData.Students.Where(x => x.Skills?.Contains("Problem Solver")??false).ToList();
+            var mockResults = MockData.Students.Where(x => x.Skills?.Contains("Problem Solver") ?? false).ToList();
 
-            Assert.Equal(mockResults,results);
+            Assert.Equal(mockResults, results);
         }
 
         [Fact]
@@ -87,9 +87,9 @@ namespace TestCases
             var requiredSkill = "Problem Solver";
 
             var results = students.Where(x => x.Skills.Contains(requiredSkill)).ToList();
-            var mockResults = MockData.Students.Where(x => x.Skills?.Contains(requiredSkill)??false).ToList();
+            var mockResults = MockData.Students.Where(x => x.Skills?.Contains(requiredSkill) ?? false).ToList();
 
-            Assert.Equal(mockResults,results);
+            Assert.Equal(mockResults, results);
         }
 
         [Fact]
@@ -98,19 +98,19 @@ namespace TestCases
             var skills = new List<string> { "Problem Solver", "Hacker" };
 
             var results = students.Where(x => x.Skills.Any(x => skills.Contains(x))).ToList();
-            var mockResults = MockData.Students.Where(x => x.Skills?.Any(x => skills.Contains(x))??false).ToList();
+            var mockResults = MockData.Students.Where(x => x.Skills?.Any(x => skills.Contains(x)) ?? false).ToList();
 
-            Assert.Equal(mockResults,results);
+            Assert.Equal(mockResults, results);
         }
 
         [Fact]
         public void WhereArrayContainsAny_InlineList()
         {
             var results = students.Where(x => x.Skills.Any(x => new List<string> { "Problem Solver", "Hacker" }.Contains(x))).ToList();
-            
-            var mockResults = MockData.Students.Where(x => x.Skills?.Any(x => new List<string> { "Problem Solver", "Hacker" }.Contains(x))??false).ToList();
 
-            Assert.Equal(mockResults,results);
+            var mockResults = MockData.Students.Where(x => x.Skills?.Any(x => new List<string> { "Problem Solver", "Hacker" }.Contains(x)) ?? false).ToList();
+
+            Assert.Equal(mockResults, results);
         }
 
         [Fact]
@@ -119,9 +119,9 @@ namespace TestCases
             string[] skills = { "Problem Solver", "Hacker" };
 
             var results = students.Where(x => x.Skills.Any(x => skills.Contains(x))).ToList();
-            var mockResults = MockData.Students.Where(x => x.Skills?.Any(x => skills.Contains(x))??false).ToList();
+            var mockResults = MockData.Students.Where(x => x.Skills?.Any(x => skills.Contains(x)) ?? false).ToList();
 
-            Assert.Equal(mockResults,results);
+            Assert.Equal(mockResults, results);
         }
 
         [Fact]
@@ -132,7 +132,7 @@ namespace TestCases
             var results = students.Where(x => lastNames.Contains(x.LastName)).ToList();
             var mockResults = MockData.Students.Where(x => lastNames.Contains(x.LastName)).ToList();
 
-            Assert.Equal(mockResults,results);
+            Assert.Equal(mockResults, results);
         }
 
         [Fact]
@@ -143,7 +143,7 @@ namespace TestCases
             var results = students.Where(x => lastNames.Contains(x.LastName)).ToList();
             var mockResults = MockData.Students.Where(x => lastNames.Contains(x.LastName)).ToList();
 
-            Assert.Equal(mockResults,results);
+            Assert.Equal(mockResults, results);
         }
 
         [Fact]
@@ -152,7 +152,7 @@ namespace TestCases
             var results = students.Where(x => new List<string> { "Teja" }.Contains(x.LastName)).ToList();
             var mockResults = MockData.Students.Where(x => new List<string> { "Teja" }.Contains(x.LastName)).ToList();
 
-            Assert.Equal(mockResults,results);
+            Assert.Equal(mockResults, results);
         }
 
         [Fact]
@@ -161,7 +161,7 @@ namespace TestCases
             var results = students.Where(x => !new List<string> { "Teja" }.Contains(x.LastName)).ToList();
             var mockResults = MockData.Students.Where(x => !new List<string> { "Teja" }.Contains(x.LastName)).ToList();
 
-            Assert.Equal(mockResults,results);
+            Assert.Equal(mockResults, results);
         }
 
         [Fact]
@@ -172,7 +172,7 @@ namespace TestCases
             var results = students.Where(x => !lastNames.Contains(x.LastName)).ToList();
             var mockResults = MockData.Students.Where(x => !lastNames.Contains(x.LastName)).ToList();
 
-            Assert.Equal(mockResults,results);
+            Assert.Equal(mockResults, results);
         }
 
         [Fact]
@@ -183,7 +183,7 @@ namespace TestCases
             var results = students.Where(x => !lastNames.Contains(x.LastName)).ToList();
             var mockResults = MockData.Students.Where(x => !lastNames.Contains(x.LastName)).ToList();
 
-            Assert.Equal(mockResults,results);
+            Assert.Equal(mockResults, results);
         }
 
         [Fact]
@@ -192,7 +192,7 @@ namespace TestCases
             var results = students.Where(x => x.Age > 15 && x.Age < 30).ToList();
             var mockResults = MockData.Students.Where(x => x.Age > 15 && x.Age < 30).ToList();
 
-            Assert.Equal(mockResults,results);
+            Assert.Equal(mockResults, results);
         }
 
         [Fact]
@@ -208,7 +208,7 @@ namespace TestCases
             var results = students.Where(x => x.FirstName.StartsWith("H")).ToList();
             var mockResults = MockData.Students.Where(x => x.FirstName.StartsWith("H")).ToList();
 
-            Assert.Equal(mockResults,results);
+            Assert.Equal(mockResults, results);
         }
 
         [Fact]
@@ -216,21 +216,21 @@ namespace TestCases
         {
             var results = students.Where(x => x.LastName.StartsWith("Ta")).ToList();
             var mockResults = MockData.Students.Where(x => x.LastName.StartsWith("Ta")).ToList();
-            Assert.Equal(mockResults,results);
+            Assert.Equal(mockResults, results);
 
             results = students.Where(x => x.LastName.StartsWith("Te")).ToList();
             mockResults = MockData.Students.Where(x => x.LastName.StartsWith("Te")).ToList();
 
-            Assert.Equal(mockResults,results);
+            Assert.Equal(mockResults, results);
         }
 
         [Fact]
         public void NestedWhereClause()
         {
             var results = students.Where(x => x.Address.Country == "India").ToList();
-            var mockResults= MockData.Students.Where(x => x.Address?.Country == "India").ToList();
+            var mockResults = MockData.Students.Where(x => x.Address?.Country == "India").ToList();
 
-            Assert.Equal(mockResults,results);
+            Assert.Equal(mockResults, results);
         }
     }
 }

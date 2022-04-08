@@ -21,7 +21,7 @@ namespace TestCases
         public void SelectSingleField()
         {
             var firstNames = students.Select(x => x.FirstName).ToList();
-            var mockResult=MockData.Students.Select(x => x.FirstName).ToList();
+            var mockResult = MockData.Students.Select(x => x.FirstName).ToList();
 
             Assert.Equal(mockResult, firstNames);
         }
@@ -40,7 +40,7 @@ namespace TestCases
         {
             var names = students.Select(x => new { FN = x.FirstName, LN = x.LastName }).ToList();
             var mockResult = MockData.Students.Select(x => new { FN = x.FirstName, LN = x.LastName }).ToList();
-            
+
             Assert.Equal(mockResult, names);
         }
 

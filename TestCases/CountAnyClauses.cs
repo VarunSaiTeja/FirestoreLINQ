@@ -22,7 +22,7 @@ namespace TestCases
         public void Count_OnValidCollection()
         {
             var count = students.Count();
-            var mockResult=MockData.Students.Count();
+            var mockResult = MockData.Students.Count();
 
             Assert.Equal(mockResult, count);
         }
@@ -39,7 +39,7 @@ namespace TestCases
         {
             var any = students.Any();
             var mockResult = MockData.Students.Any();
-            
+
             Assert.Equal(mockResult, any);
         }
 
@@ -56,7 +56,7 @@ namespace TestCases
             var result = students.Where(x => x.Age > 25).Any();
             var mockResult = MockData.Students.Where(x => x.Age > 25).Any();
 
-            Assert.Equal(mockResult,result);
+            Assert.Equal(mockResult, result);
         }
 
         [Fact]
@@ -65,7 +65,7 @@ namespace TestCases
             var result = students.Where(x => x.Age > 100).Any();
             var mockResult = MockData.Students.Where(x => x.Age > 100).Any();
 
-            Assert.Equal(mockResult,result);
+            Assert.Equal(mockResult, result);
         }
 
         [Fact]
@@ -83,7 +83,7 @@ namespace TestCases
             var result = students.Any(x => x.Age > 100);
             var mockResult = MockData.Students.Any(x => x.Age > 100);
 
-            Assert.Equal(mockResult,result);
+            Assert.Equal(mockResult, result);
         }
 
         [Fact]
@@ -92,7 +92,7 @@ namespace TestCases
             var result = students.Any(x => x.Age > 25);
             var mockResult = MockData.Students.Any(x => x.Age > 25);
 
-            Assert.Equal(mockResult,result);
+            Assert.Equal(mockResult, result);
         }
 
         [Fact]
