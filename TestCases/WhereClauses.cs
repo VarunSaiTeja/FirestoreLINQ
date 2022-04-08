@@ -173,5 +173,12 @@ namespace TestCases
             results = students.Where(x => x.LastName.StartsWith("Te")).ToList();
             Assert.True(results.Count == 2);
         }
+
+        [Fact]
+        public void NestedWhereClause()
+        {
+            var results = students.Where(x => x.Address.Country == "India").ToList();
+            Assert.True(results.Count == 1);
+        }
     }
 }

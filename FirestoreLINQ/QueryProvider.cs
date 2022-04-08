@@ -493,7 +493,7 @@ namespace FirestoreLINQ
 
             if (leftExp.NodeType == ExpressionType.MemberAccess && ((MemberExpression)leftExp).Member is PropertyInfo)
             {
-                fieldName = GetFirestoreFieldName((leftExp as MemberExpression).Member);
+                fieldName = GetFirestoreFieldName(leftExp as MemberExpression);
 
                 fieldValue = GetExpressionValue(rightExp);
             }
@@ -508,6 +508,17 @@ namespace FirestoreLINQ
             else throw new NotImplementedException();
 
             return (fieldName, fieldValue);
+        }
+
+        static string GetFirestoreFieldName(MemberExpression exp)
+        {
+            string lastPropertyName = GetFirestoreFieldName(exp.Member);
+            while (exp.Expression != null && exp.Expression.NodeType == ExpressionType.MemberAccess)
+            {
+                exp = exp.Expression as MemberExpression;
+                lastPropertyName = GetFirestoreFieldName(exp.Member) + "." + lastPropertyName;
+            }
+            return lastPropertyName;
         }
 
         static string GetFirestoreFieldName(MemberInfo memberInfo)

@@ -16,5 +16,18 @@ namespace TestCases
 
         [FirestoreProperty]
         public int Age { get; set; }
+
+        [FirestoreProperty]
+        public Address Address { get; set; }
+    }
+
+    [FirestoreData]
+    public class Address
+    {
+        [FirestoreProperty]
+        public string City { get; set; }
+
+        [FirestoreProperty]
+        public string Country { get; set; }
     }
 }
