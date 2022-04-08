@@ -152,10 +152,26 @@ namespace TestCases
         }
 
         [Fact]
-        public void Where_FirestoreMemberComparision()
+        public void Where_FirestoreMemberComparision_ThrowsException()
         {
             var ex = Assert.Throws<NotSupportedException>(() => students.Where(x => x.FirstName != x.LastName).ToList());
             Assert.Equal(Constants.FirestoreDontSupportMsg, ex.Message);
+        }
+
+        [Fact]
+        public void WhereStringStartsWithSingleChar()
+        {
+            var results = students.Where(x => x.FirstName.StartsWith("H")).ToList();
+            Assert.True(results.Count == 1);
+        }
+
+        [Fact]
+        public void WhereStringStartsWithSingleString()
+        {
+            var results = students.Where(x => x.LastName.StartsWith("Ta")).ToList();
+            Assert.True(results.Count == 0);
+            results = students.Where(x => x.LastName.StartsWith("Te")).ToList();
+            Assert.True(results.Count == 2);
         }
     }
 }

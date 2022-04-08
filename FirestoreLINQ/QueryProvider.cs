@@ -117,7 +117,18 @@ namespace FirestoreLINQ
             var snapshot = GetResult();
 
             if (!snapshot.Any())
-                return default;
+            {
+                if (typeof(TResult) == typeof(TResult))
+                {
+                    Type t = typeof(List<>).MakeGenericType(typeof(TResult).GenericTypeArguments.First());
+                    IList res = (IList)Activator.CreateInstance(t);
+                    return (TResult)res;
+                }
+                else
+                {
+                    return default;
+                }
+            }
 
             return ConvertResults<TResult>(snapshot);
         }
@@ -366,6 +377,21 @@ namespace FirestoreLINQ
                     values = GetExpressionValue(me.Arguments.First()) as IEnumerable;
                 }
                 query = query.WhereArrayContainsAny(fieldName, values);
+            }
+            else if (methodName == "StartsWith")
+            {
+                var startCode = clause.value.ToString();
+                string endCode;
+                if (startCode.Length == 1)
+                {
+                    endCode = ((char)(startCode.Last() + 1)).ToString();
+                }
+                else
+                {
+                    endCode = startCode.Substring(0, startCode.Length - 1) + ((char)(startCode.Last() + 1)).ToString();
+                }
+                query = query.WhereGreaterThanOrEqualTo(fieldName, clause.value)
+                    .WhereLessThan(fieldName, endCode);
             }
         }
 
