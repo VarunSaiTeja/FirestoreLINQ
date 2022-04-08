@@ -48,14 +48,18 @@ namespace TestCases
         public void Single_Predicate_OneItem()
         {
             var result = students.Single(x => x.Age == 25);
-            Assert.Equal("Sai", result.FirstName);
+            var mockResult = MockData.Students.Single(x => x.Age == 25);
+
+            Assert.Equal(mockResult, result);
         }
 
         [Fact]
         public void SingleOrDefault_Predicate_OneItem()
         {
             var result = students.SingleOrDefault(x => x.Age == 25);
-            Assert.Equal("Sai", result.FirstName);
+            var mockResult = MockData.Students.SingleOrDefault(x => x.Age == 25);
+
+            Assert.Equal(mockResult, result);
         }
 
         [Fact]
@@ -82,7 +86,10 @@ namespace TestCases
         [Fact]
         public void SingleOrDefault_Predicate_NoItem()
         {
-            Assert.Null(students.SingleOrDefault(x => x.Age > 100));
+            var result=students.SingleOrDefault(x => x.Age > 100);
+            var mockResult = MockData.Students.SingleOrDefault(x => x.Age > 100);
+            
+            Assert.Equal(mockResult,result);
         }
     }
 }

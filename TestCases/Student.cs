@@ -1,10 +1,14 @@
 ﻿using Google.Cloud.Firestore;
+using System;
 using System.Collections.Generic;
 namespace TestCases
 {
     [FirestoreData]
-    public class Student
+    public class Student: IEquatable<Student>
     {
+        [FirestoreDocumentId]
+        public string Id { get; set; }
+
         [FirestoreProperty]
         public List<string> Skills { get; set; }
 
@@ -19,6 +23,14 @@ namespace TestCases
 
         [FirestoreProperty]
         public Address Address { get; set; }
+
+        public bool Equals(Student other)
+        {
+            return this.Id==other.Id &&
+                this.FirstName==other.FirstName &&
+                this.LastName==other.LastName &&
+                this.Age==other.Age;
+        }
     }
 
     [FirestoreData]

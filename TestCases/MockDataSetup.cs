@@ -1,6 +1,5 @@
 ﻿using FirestoreLINQ;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using Xunit;
 
@@ -27,38 +26,8 @@ namespace TestCases
         [Fact(Skip = "Use this test only for mocking/inserting Students data in firestore, Run this test alone intially.")]
         public void Setup_Students()
         {
-            var students = new List<Student>
-            {
-                new Student
-                {
-                    FirstName = "Sai",
-                    LastName = "Teja",
-                    Age = 25
-                },
-                new Student
-                {
-                    FirstName = "Harshini",
-                    LastName = "Darisi",
-                    Skills = new List<string>
-                    {
-                        "Problem Solver",
-                        "LINQ"
-                    },
-                    Age = 15
-                },
-                new Student
-                {
-                    Age = 30,
-                    FirstName = "Varun",
-                    LastName = "Teja",
-                    Skills = new List<string>
-                    {
-                        "Problem Solver"
-                    }
-                }
-            };
-            Console.WriteLine(students.Count);
-            foreach (var student in students)
+            Console.WriteLine(MockData.Students.Count);
+            foreach (var student in MockData.Students)
             {
                 var rs = _db.firestoreDb.Collection<Student>().AddAsync(student).Result;
                 Assert.NotNull(rs);

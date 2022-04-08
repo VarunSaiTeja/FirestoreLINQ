@@ -19,59 +19,80 @@ namespace TestCases
         public void Take()
         {
             var results = students.Take(2).ToList();
-            Assert.Equal(2, results.Count);
+            var mockResults = MockData.Students.Take(2).ToList();
+
+            Assert.Equal(mockResults, results);
         }
 
         [Fact]
         public void Take_Followedby_OrderBy()
         {
             var results = students.OrderBy(x => x.Age).Take(2).ToList();
-            Assert.Equal(2, results.Count);
+            var mockResults = MockData.Students.OrderBy(x => x.Age).Take(2).ToList();
 
-            Assert.Equal("Harshini", results[0].FirstName);
-            Assert.Equal("Sai", results[1].FirstName);
+            Assert.Equal(mockResults.Count, results.Count);
+
+            Assert.Equal(mockResults, results);
+            Assert.Equal(mockResults, results);
         }
 
         [Fact]
         public void Take_WhereBy()
         {
             var results = students.Take(1).Where(x => x.LastName == "Teja").ToList();
+            var mockResults = MockData.Students.Take(1).Where(x => x.LastName == "Teja").ToList();
+
+            Assert.Single(mockResults);
             Assert.Single(results);
-            Assert.Equal("Teja", results[0].LastName);
-            Assert.Equal("Sai", results[0].FirstName);
+
+            Assert.Equal(mockResults, results);
+            Assert.Equal(mockResults, results);
         }
 
         [Fact]
         public void Skip()
         {
             var results = students.Skip(1).ToList();
-            Assert.Equal(2, results.Count);
+            var mockResults = MockData.Students.Skip(1).ToList();
+
+            Assert.Equal(mockResults, results);
         }
 
         [Fact]
         public void Skip_Followedby_OrderBy()
         {
             var results = students.OrderBy(x => x.Age).Skip(2).ToList();
+            var mockResults = MockData.Students.OrderBy(x => x.Age).Skip(2).ToList();
+
+            Assert.Single(mockResults);
             Assert.Single(results);
 
-            Assert.Equal("Varun", results[0].FirstName);
+            Assert.Equal(mockResults, results);
         }
 
         [Fact]
         public void Skip_WhereBy()
         {
             var results = students.Skip(1).Where(x => x.LastName == "Teja").ToList();
+            var mockResults = MockData.Students.Skip(1).Where(x => x.LastName == "Teja").ToList();
+
+            Assert.Single(mockResults);
             Assert.Single(results);
-            Assert.Equal("Teja", results[0].LastName);
-            Assert.Equal("Varun", results[0].FirstName);
+
+            Assert.Equal(mockResults, results);
+            Assert.Equal(mockResults, results);
         }
 
         [Fact]
         public void SkipTake()
         {
             var results = students.Skip(1).Take(1).ToList();
+            var mockResults = MockData.Students.Skip(1).Take(1).ToList();
+
+            Assert.Single(mockResults);
             Assert.Single(results);
-            Assert.Equal("Varun", results[0].FirstName);
+
+            Assert.Equal(mockResults, results);
         }
     }
 }

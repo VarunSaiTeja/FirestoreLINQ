@@ -20,21 +20,27 @@ namespace TestCases
         public void First()
         {
             var results = students.First();
-            Assert.Equal("Sai", results.FirstName);
+            var mockResult = MockData.Students.First();
+
+            Assert.Equal(mockResult, results);
         }
 
         [Fact]
         public void OrderBy_First()
         {
-            var results = students.OrderBy(x => x.FirstName).First();
-            Assert.Equal("Harshini", results.FirstName);
+            var result = students.OrderBy(x => x.FirstName).First();
+            var mockResult = MockData.Students.OrderBy(x => x.FirstName).First();
+
+            Assert.Equal(mockResult, result);
         }
 
         [Fact]
         public void First_InsidePredicate_Valid()
         {
             var result = students.First(x => x.Age > 15);
-            Assert.Equal("Sai", result.FirstName);
+            var mockResult = MockData.Students.First(x => x.Age > 15);
+            
+            Assert.Equal(mockResult, result);
         }
 
         [Fact]
@@ -48,14 +54,18 @@ namespace TestCases
         public void FirstOrDefault_InsidePredicate_Valid()
         {
             var result = students.FirstOrDefault(x => x.Age > 15);
-            Assert.Equal("Sai", result.FirstName);
+            var mockResult = MockData.Students.FirstOrDefault(x => x.Age > 15);
+
+            Assert.Equal(mockResult, result);
         }
 
         [Fact]
         public void FirstOrDefault_InsidePredicate_InValid()
         {
             var result = students.FirstOrDefault(x => x.Age > 100);
-            Assert.Null(result);
+            var mockResult = MockData.Students.FirstOrDefault(x => x.Age > 100);
+
+            Assert.Equal(mockResult,result);
         }
     }
 }

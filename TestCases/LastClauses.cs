@@ -28,14 +28,18 @@ namespace TestCases
         public void Last_WithOrderBy()
         {
             var results = students.OrderBy(x => x.FirstName).Last();
-            Assert.Equal("Varun", results.FirstName);
+            var mockResult = MockData.Students.OrderBy(x => x.FirstName).Last();
+
+            Assert.Equal(mockResult, results);
         }
 
         [Fact]
         public void Last_InsidePredicate_Valid()
         {
             var result = students.OrderBy(x => x.Age).Last(x => x.Age > 15);
-            Assert.Equal("Varun", result.FirstName);
+            var mockResult = MockData.Students.OrderBy(x => x.Age).Last(x => x.Age > 15);
+
+            Assert.Equal(mockResult, result);
         }
 
         [Fact]
@@ -49,14 +53,18 @@ namespace TestCases
         public void LastOrDefault_InsidePredicate_Valid()
         {
             var result = students.OrderBy(x => x.Age).LastOrDefault(x => x.Age > 15);
-            Assert.Equal("Varun", result.FirstName);
+            var mockResult = MockData.Students.OrderBy(x => x.Age).LastOrDefault(x => x.Age > 15);
+
+            Assert.Equal(mockResult, result);
         }
 
         [Fact]
         public void LastOrDefault_InsidePredicate_InValid()
         {
             var result = students.OrderBy(x => x.Age).LastOrDefault(x => x.Age > 100);
-            Assert.Null(result);
+            var mockResult = MockData.Students.OrderBy(x => x.Age).LastOrDefault(x => x.Age > 100);
+
+            Assert.Equal(mockResult, result);
         }
     }
 }

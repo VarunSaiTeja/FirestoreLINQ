@@ -22,7 +22,9 @@ namespace TestCases
         public void Count_OnValidCollection()
         {
             var count = students.Count();
-            Assert.Equal(3, count);
+            var mockResult=MockData.Students.Count();
+
+            Assert.Equal(mockResult, count);
         }
 
         [Fact]
@@ -36,7 +38,9 @@ namespace TestCases
         public void Any_OnValidCollection()
         {
             var any = students.Any();
-            Assert.True(any);
+            var mockResult = MockData.Students.Any();
+            
+            Assert.Equal(mockResult, any);
         }
 
         [Fact]
@@ -49,50 +53,64 @@ namespace TestCases
         [Fact]
         public void Where_AnyTrue()
         {
-            var any = students.Where(x => x.Age > 25).Any();
-            Assert.True(any);
+            var result = students.Where(x => x.Age > 25).Any();
+            var mockResult = MockData.Students.Where(x => x.Age > 25).Any();
+
+            Assert.Equal(mockResult,result);
         }
 
         [Fact]
         public void Where_AnyFalse()
         {
-            var any = students.Where(x => x.Age > 100).Any();
-            Assert.False(any);
+            var result = students.Where(x => x.Age > 100).Any();
+            var mockResult = MockData.Students.Where(x => x.Age > 100).Any();
+
+            Assert.Equal(mockResult,result);
         }
 
         [Fact]
         public void Where_Count()
         {
             var count = students.Where(x => x.Age >= 25).Count();
-            Assert.Equal(2, count);
+            var mockResult = MockData.Students.Where(x => x.Age >= 25).Count();
+
+            Assert.Equal(mockResult, count);
         }
 
         [Fact]
         public void Any_InsidePredicate_Case_Valid()
         {
             var result = students.Any(x => x.Age > 100);
-            Assert.False(result);
+            var mockResult = MockData.Students.Any(x => x.Age > 100);
+
+            Assert.Equal(mockResult,result);
         }
 
         [Fact]
         public void Any_InsidePredicate_Case_InValid()
         {
             var result = students.Any(x => x.Age > 25);
-            Assert.True(result);
+            var mockResult = MockData.Students.Any(x => x.Age > 25);
+
+            Assert.Equal(mockResult,result);
         }
 
         [Fact]
         public void Count_InsidePredicate_Case_1()
         {
             var count = students.Count(x => x.Age < 25);
-            Assert.Equal(1, count);
+            var mockResult = MockData.Students.Count(x => x.Age < 25);
+
+            Assert.Equal(mockResult, count);
         }
 
         [Fact]
         public void Count_InsidePredicate_Case_2()
         {
             var count = students.Count(x => x.Age >= 25);
-            Assert.Equal(2, count);
+            var mockResult = MockData.Students.Count(x => x.Age >= 25);
+
+            Assert.Equal(mockResult, count);
         }
     }
 }

@@ -21,36 +21,27 @@ namespace TestCases
         public void SelectSingleField()
         {
             var firstNames = students.Select(x => x.FirstName).ToList();
-            Assert.Equal(3, firstNames.Count);
-            Assert.Equal("Sai", firstNames[0]);
-            Assert.Equal("Varun", firstNames[1]);
-            Assert.Equal("Harshini", firstNames[2]);
+            var mockResult=MockData.Students.Select(x => x.FirstName).ToList();
+
+            Assert.Equal(mockResult, firstNames);
         }
 
         [Fact]
         public void SelectMultipleField_SamePropertyName()
         {
             var names = students.Select(x => new { x.FirstName, x.LastName }).ToList();
-            Assert.Equal(3, names.Count);
-            Assert.Equal("Sai", names[0].FirstName);
-            Assert.Equal("Varun", names[1].FirstName);
-            Assert.Equal("Harshini", names[2].FirstName);
-            Assert.Equal("Teja", names[0].LastName);
-            Assert.Equal("Teja", names[1].LastName);
-            Assert.Equal("Darisi", names[2].LastName);
+            var mockResult = MockData.Students.Select(x => new { x.FirstName, x.LastName }).ToList();
+
+            Assert.Equal(mockResult, names);
         }
 
         [Fact]
         public void SelectMultipleField_DifferentPropertyName()
         {
             var names = students.Select(x => new { FN = x.FirstName, LN = x.LastName }).ToList();
-            Assert.Equal(3, names.Count);
-            Assert.Equal("Sai", names[0].FN);
-            Assert.Equal("Varun", names[1].FN);
-            Assert.Equal("Harshini", names[2].FN);
-            Assert.Equal("Teja", names[0].LN);
-            Assert.Equal("Teja", names[1].LN);
-            Assert.Equal("Darisi", names[2].LN);
+            var mockResult = MockData.Students.Select(x => new { FN = x.FirstName, LN = x.LastName }).ToList();
+            
+            Assert.Equal(mockResult, names);
         }
 
         [Fact]
