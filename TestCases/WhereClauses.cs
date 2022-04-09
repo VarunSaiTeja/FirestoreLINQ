@@ -232,5 +232,25 @@ namespace TestCases
 
             Assert.Equal(mockResults, results);
         }
+
+        [Fact]
+        public void NestedWhereIn_MemberArray()
+        {
+            string[] countries = { "India" };
+
+            var results = students.Where(x => countries.Contains(x.Address.Country)).ToList();
+            var mockResults = MockData.Students.Where(x => countries.Contains(x.Address?.Country)).ToList();
+
+            Assert.Equal(mockResults, results);
+        }
+
+        [Fact]
+        public void NestedWhereStringStartsWith()
+        {
+            var results = students.Where(x => x.Address.Country.StartsWith("Ind")).ToList();
+            var mockResults = MockData.Students.Where(x => x.Address?.Country?.StartsWith("Ind") ?? false).ToList();
+
+            Assert.Equal(mockResults, results);
+        }
     }
 }

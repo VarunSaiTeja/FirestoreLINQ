@@ -196,14 +196,14 @@ namespace FirestoreLINQ
                     {
                         case "Average" or "Sum":
                             {
-                                var fieldName = GetFirestoreFieldName((le.Body as MemberExpression).Member);
+                                var fieldName = GetFirestoreFieldName(le.Body as MemberExpression);
                                 string[] selectedFields = { fieldName };
                                 query = query.Select(selectedFields);
                                 break;
                             }
                         case "Min" or "Max":
                             {
-                                var fieldName = GetFirestoreFieldName((le.Body as MemberExpression).Member);
+                                var fieldName = GetFirestoreFieldName(le.Body as MemberExpression);
                                 string[] selectedFields = { fieldName };
 
                                 if (mce.Method.Name == "Min")
@@ -216,7 +216,7 @@ namespace FirestoreLINQ
                             }
                         case "MinBy" or "MaxBy":
                             {
-                                var fieldName = GetFirestoreFieldName((le.Body as MemberExpression).Member);
+                                var fieldName = GetFirestoreFieldName(le.Body as MemberExpression);
 
                                 if (mce.Method.Name == "MinBy")
                                     query = query.OrderBy(fieldName);
@@ -236,15 +236,14 @@ namespace FirestoreLINQ
                             {
                                 if (le.Body.NodeType == ExpressionType.MemberAccess)
                                 {
-                                    var ma = le.Body as MemberExpression;
-                                    var fieldName = GetFirestoreFieldName(ma.Member);
+                                    var fieldName = GetFirestoreFieldName(le.Body as MemberExpression);
                                     SelectedFields = new string[] { fieldName };
                                     query = query.Select(fieldName);
                                 }
                                 else if (le.Body.NodeType == ExpressionType.New)
                                 {
                                     var ne = le.Body as NewExpression;
-                                    SelectedFields = ne.Arguments.Select(x => x as MemberExpression).Select(x => GetFirestoreFieldName(x.Member)).ToArray();
+                                    SelectedFields = ne.Arguments.Select(x => GetFirestoreFieldName(x as MemberExpression)).ToArray();
                                     query = query.Select(SelectedFields);
                                 }
                             }
@@ -289,8 +288,7 @@ namespace FirestoreLINQ
 
         void OrderResolver(LambdaExpression expression, bool isDesc)
         {
-            var me = expression.Body as MemberExpression;
-            var fieldName = GetFirestoreFieldName(me.Member);
+            var fieldName = GetFirestoreFieldName(expression.Body as MemberExpression);
 
             if (fieldName == null)
                 throw new InvalidOperationException();
@@ -338,21 +336,20 @@ namespace FirestoreLINQ
 
         void ParseCallExpression(MethodCallExpression expression, bool notAlsoApplied = false)
         {
-            var clause = GetFieldNameAndValue(expression);
-            var fieldName = GetFirestoreFieldName(clause.memberInfo);
+            var clause = GetMemberAndFieldNameAndValue(expression);
             var methodName = expression.Method.Name;
 
             if (methodName == "Contains")
             {
                 var isGeneric = (clause.memberInfo as PropertyInfo).PropertyType.IsGenericType;
                 if (isGeneric)
-                    query = query.WhereArrayContains(fieldName, clause.value);
+                    query = query.WhereArrayContains(clause.fieldName, clause.value);
                 else
                 {
                     if (notAlsoApplied)
-                        query = query.WhereNotIn(fieldName, clause.value as IEnumerable);
+                        query = query.WhereNotIn(clause.fieldName, clause.value as IEnumerable);
                     else
-                        query = query.WhereIn(fieldName, clause.value as IEnumerable);
+                        query = query.WhereIn(clause.fieldName, clause.value as IEnumerable);
                 }
             }
             else if (methodName == "Any")
@@ -376,7 +373,7 @@ namespace FirestoreLINQ
                 {
                     values = GetExpressionValue(me.Arguments.First()) as IEnumerable;
                 }
-                query = query.WhereArrayContainsAny(fieldName, values);
+                query = query.WhereArrayContainsAny(clause.fieldName, values);
             }
             else if (methodName == "StartsWith")
             {
@@ -390,8 +387,8 @@ namespace FirestoreLINQ
                 {
                     endCode = startCode.Substring(0, startCode.Length - 1) + ((char)(startCode.Last() + 1)).ToString();
                 }
-                query = query.WhereGreaterThanOrEqualTo(fieldName, clause.value)
-                    .WhereLessThan(fieldName, endCode);
+                query = query.WhereGreaterThanOrEqualTo(clause.fieldName, clause.value)
+                    .WhereLessThan(clause.fieldName, endCode);
             }
         }
 
@@ -423,15 +420,16 @@ namespace FirestoreLINQ
             }
         }
 
-        static (MemberInfo memberInfo, object value) GetFieldNameAndValue(MethodCallExpression expression)
+        static (MemberInfo memberInfo, string fieldName, object value) GetMemberAndFieldNameAndValue(MethodCallExpression expression)
         {
             MemberInfo memberInfo = null;
+            MemberExpression me = null;
             object value = null;
             if (expression.Object != null)
             {
                 if (expression.Object.NodeType == ExpressionType.MemberAccess)
                 {
-                    var me = expression.Object as MemberExpression;
+                    me = expression.Object as MemberExpression;
                     memberInfo = me.Member;
 
                     var fireProperty = memberInfo.GetCustomAttribute<FirestorePropertyAttribute>();
@@ -447,7 +445,7 @@ namespace FirestoreLINQ
                     value = li.Initializers.Select(x => GetExpressionValue(x.Arguments
                            [0]));
 
-                    var me = expression.Arguments[0] as MemberExpression;
+                    me = expression.Arguments[0] as MemberExpression;
                     memberInfo = me.Member;
 
                     var fireProperty = memberInfo.GetCustomAttribute<FirestorePropertyAttribute>();
@@ -457,34 +455,29 @@ namespace FirestoreLINQ
             }
             if (memberInfo == null && expression.Arguments[0] != null)
             {
-                return GetFieldNameAndValue(expression.Arguments, expression.Object);
-            }
-            return (memberInfo, value);
-        }
-
-        static (MemberInfo memberInfo, object value) GetFieldNameAndValue(IList<Expression> args, Expression objectExp)
-        {
-            var me = args[0] as MemberExpression;
-            var memberInfo = me.Member;
-            object value = null;
-
-            var fireProperty = memberInfo.GetCustomAttribute<FirestorePropertyAttribute>();
-            if (fireProperty != null)
-            {
-                value = GetExpressionValue(objectExp ?? args[1]);
-            }
-            else
-            {
-                me = args[1] as MemberExpression;
+                me = expression.Arguments[0] as MemberExpression;
                 memberInfo = me.Member;
-                fireProperty = memberInfo.GetCustomAttribute<FirestorePropertyAttribute>();
+                value = null;
+
+                var fireProperty = memberInfo.GetCustomAttribute<FirestorePropertyAttribute>();
                 if (fireProperty != null)
                 {
-                    value = GetExpressionValue(objectExp ?? args[0]);
+                    value = GetExpressionValue(expression.Object ?? expression.Arguments[1]);
+                }
+                else
+                {
+                    me = expression.Arguments[1] as MemberExpression;
+                    memberInfo = me.Member;
+                    fireProperty = memberInfo.GetCustomAttribute<FirestorePropertyAttribute>();
+                    if (fireProperty != null)
+                    {
+                        value = GetExpressionValue(expression.Object ?? expression.Arguments[0]);
+                    }
                 }
             }
-            return (memberInfo, value);
+            return (memberInfo, GetFirestoreFieldName(me), value);
         }
+
 
         static (string fieldName, object fieldValue) GetFieldNameAndValue(Expression leftExp, Expression rightExp)
         {
@@ -499,7 +492,7 @@ namespace FirestoreLINQ
             }
             else if (rightExp.NodeType == ExpressionType.MemberAccess && ((MemberExpression)rightExp).Member is PropertyInfo)
             {
-                fieldName = GetFirestoreFieldName((rightExp as MemberExpression).Member);
+                fieldName = GetFirestoreFieldName(rightExp as MemberExpression);
 
                 fieldValue = GetExpressionValue(leftExp);
             }
@@ -512,18 +505,14 @@ namespace FirestoreLINQ
 
         static string GetFirestoreFieldName(MemberExpression exp)
         {
-            string lastPropertyName = GetFirestoreFieldName(exp.Member);
+            string path = exp.Member.GetCustomAttribute<FirestorePropertyAttribute>().Name ?? exp.Member.Name;
             while (exp.Expression != null && exp.Expression.NodeType == ExpressionType.MemberAccess)
             {
                 exp = exp.Expression as MemberExpression;
-                lastPropertyName = GetFirestoreFieldName(exp.Member) + "." + lastPropertyName;
+                var memberName = exp.Member.GetCustomAttribute<FirestorePropertyAttribute>().Name ?? exp.Member.Name;
+                path = memberName + "." + path;
             }
-            return lastPropertyName;
-        }
-
-        static string GetFirestoreFieldName(MemberInfo memberInfo)
-        {
-            return memberInfo.GetCustomAttribute<FirestorePropertyAttribute>().Name ?? memberInfo.Name;
+            return path;
         }
 
         static object GetExpressionValue(Expression expression)
