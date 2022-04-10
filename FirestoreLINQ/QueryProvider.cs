@@ -7,7 +7,6 @@ namespace FirestoreLINQ
 {
     internal partial class QueryProvider : IQueryProvider
     {
-        static readonly string FirestoreDontSupportMsg = "Firestore doesn't support this operation.";
         string[] SelectedFields;
         CollectionReference _collection;
         Query query;
@@ -196,14 +195,14 @@ namespace FirestoreLINQ
                     {
                         case "Average" or "Sum":
                             {
-                                var fieldName = GetFirestoreFieldName(le.Body as MemberExpression);
+                                var fieldName = le.Body.GetFirestoreFieldName();
                                 string[] selectedFields = { fieldName };
                                 query = query.Select(selectedFields);
                                 break;
                             }
                         case "Min" or "Max":
                             {
-                                var fieldName = GetFirestoreFieldName(le.Body as MemberExpression);
+                                var fieldName = le.Body.GetFirestoreFieldName();
                                 string[] selectedFields = { fieldName };
 
                                 if (mce.Method.Name == "Min")
@@ -216,7 +215,7 @@ namespace FirestoreLINQ
                             }
                         case "MinBy" or "MaxBy":
                             {
-                                var fieldName = GetFirestoreFieldName(le.Body as MemberExpression);
+                                var fieldName = le.Body.GetFirestoreFieldName();
 
                                 if (mce.Method.Name == "MinBy")
                                     query = query.OrderBy(fieldName);
@@ -236,14 +235,14 @@ namespace FirestoreLINQ
                             {
                                 if (le.Body.NodeType == ExpressionType.MemberAccess)
                                 {
-                                    var fieldName = GetFirestoreFieldName(le.Body as MemberExpression);
+                                    var fieldName = le.Body.GetFirestoreFieldName();
                                     SelectedFields = new string[] { fieldName };
                                     query = query.Select(fieldName);
                                 }
                                 else if (le.Body.NodeType == ExpressionType.New)
                                 {
                                     var ne = le.Body as NewExpression;
-                                    SelectedFields = ne.Arguments.Select(x => GetFirestoreFieldName(x as MemberExpression)).ToArray();
+                                    SelectedFields = ne.Arguments.Select(x => x.GetFirestoreFieldName()).ToArray();
                                     query = query.Select(SelectedFields);
                                 }
                             }
@@ -269,13 +268,13 @@ namespace FirestoreLINQ
                     {
                         case "Skip":
                             {
-                                var itemsCount = (int)GetExpressionValue((expression as MethodCallExpression).Arguments.Last());
+                                var itemsCount = (int)(expression as MethodCallExpression).Arguments.Last().GetExpressionValue();
                                 query = query.Offset(itemsCount);
                                 break;
                             }
                         case "Take" or "TakeLast":
                             {
-                                var itemsCount = (int)GetExpressionValue((expression as MethodCallExpression).Arguments.Last());
+                                var itemsCount = (int)(expression as MethodCallExpression).Arguments.Last().GetExpressionValue();
                                 query = mce.Method.Name == "Take" ? query.Limit(itemsCount) : query.LimitToLast(itemsCount);
                                 break;
                             }
@@ -288,7 +287,7 @@ namespace FirestoreLINQ
 
         void OrderResolver(LambdaExpression expression, bool isDesc)
         {
-            var fieldName = GetFirestoreFieldName(expression.Body as MemberExpression);
+            var fieldName = expression.Body.GetFirestoreFieldName();
 
             if (fieldName == null)
                 throw new InvalidOperationException();
@@ -336,7 +335,7 @@ namespace FirestoreLINQ
 
         void ParseCallExpression(MethodCallExpression expression, bool notAlsoApplied = false)
         {
-            var clause = GetMemberAndFieldNameAndValue(expression);
+            var clause = expression.GetMemberAndFieldNameAndValue();
             var methodName = expression.Method.Name;
 
             if (methodName == "Contains")
@@ -361,17 +360,16 @@ namespace FirestoreLINQ
                 if (me.Object != null)
                 {
                     if (me.Object.NodeType == ExpressionType.MemberAccess)
-                        values = GetExpressionValue(me.Object as MemberExpression) as IEnumerable;
+                        values = (me.Object as MemberExpression).GetExpressionValue() as IEnumerable;
                     else if (me.Object.NodeType == ExpressionType.ListInit)
                     {
                         var li = me.Object as ListInitExpression;
-                        values = li.Initializers.Select(x => GetExpressionValue(x.Arguments
-                               [0]));
+                        values = li.Initializers.Select(x => x.Arguments[0].GetExpressionValue());
                     }
                 }
                 else
                 {
-                    values = GetExpressionValue(me.Arguments.First()) as IEnumerable;
+                    values = me.Arguments.First().GetExpressionValue() as IEnumerable;
                 }
                 query = query.WhereArrayContainsAny(clause.fieldName, values);
             }
@@ -394,7 +392,7 @@ namespace FirestoreLINQ
 
         void ParseBinaryExpression(BinaryExpression expression)
         {
-            var clause = GetFieldNameAndValue(expression.Left, expression.Right);
+            var clause = FieldValueHelper.GetFieldNameAndValue(expression.Left, expression.Right);
             switch (expression.NodeType)
             {
                 case ExpressionType.Equal:
@@ -418,123 +416,6 @@ namespace FirestoreLINQ
                 default:
                     throw new NotSupportedException();
             }
-        }
-
-        static (MemberInfo memberInfo, string fieldName, object value) GetMemberAndFieldNameAndValue(MethodCallExpression expression)
-        {
-            MemberInfo memberInfo = null;
-            MemberExpression me = null;
-            object value = null;
-            if (expression.Object != null)
-            {
-                if (expression.Object.NodeType == ExpressionType.MemberAccess)
-                {
-                    me = expression.Object as MemberExpression;
-                    memberInfo = me.Member;
-
-                    var fireProperty = memberInfo.GetCustomAttribute<FirestorePropertyAttribute>();
-                    if (fireProperty != null)
-                    {
-                        value = GetExpressionValue(expression.Arguments[0]);
-                    }
-                    else memberInfo = null;
-                }
-                else if (expression.Object.NodeType == ExpressionType.ListInit)
-                {
-                    var li = expression.Object as ListInitExpression;
-                    value = li.Initializers.Select(x => GetExpressionValue(x.Arguments
-                           [0]));
-
-                    me = expression.Arguments[0] as MemberExpression;
-                    memberInfo = me.Member;
-
-                    var fireProperty = memberInfo.GetCustomAttribute<FirestorePropertyAttribute>();
-                    if (fireProperty == null)
-                        me = null;
-                }
-            }
-            if (memberInfo == null && expression.Arguments[0] != null)
-            {
-                me = expression.Arguments[0] as MemberExpression;
-                memberInfo = me.Member;
-                value = null;
-
-                var fireProperty = memberInfo.GetCustomAttribute<FirestorePropertyAttribute>();
-                if (fireProperty != null)
-                {
-                    value = GetExpressionValue(expression.Object ?? expression.Arguments[1]);
-                }
-                else
-                {
-                    me = expression.Arguments[1] as MemberExpression;
-                    memberInfo = me.Member;
-                    fireProperty = memberInfo.GetCustomAttribute<FirestorePropertyAttribute>();
-                    if (fireProperty != null)
-                    {
-                        value = GetExpressionValue(expression.Object ?? expression.Arguments[0]);
-                    }
-                }
-            }
-            return (memberInfo, GetFirestoreFieldName(me), value);
-        }
-
-
-        static (string fieldName, object fieldValue) GetFieldNameAndValue(Expression leftExp, Expression rightExp)
-        {
-            string fieldName;
-            object fieldValue;
-
-            if (leftExp.NodeType == ExpressionType.MemberAccess && ((MemberExpression)leftExp).Member is PropertyInfo)
-            {
-                fieldName = GetFirestoreFieldName(leftExp as MemberExpression);
-
-                fieldValue = GetExpressionValue(rightExp);
-            }
-            else if (rightExp.NodeType == ExpressionType.MemberAccess && ((MemberExpression)rightExp).Member is PropertyInfo)
-            {
-                fieldName = GetFirestoreFieldName(rightExp as MemberExpression);
-
-                fieldValue = GetExpressionValue(leftExp);
-            }
-            else if (leftExp.NodeType == ExpressionType.Parameter || rightExp.NodeType == ExpressionType.Parameter)
-                throw new NotSupportedException("Passing paramater is not supported");
-            else throw new NotImplementedException();
-
-            return (fieldName, fieldValue);
-        }
-
-        static string GetFirestoreFieldName(MemberExpression exp)
-        {
-            string path = exp.Member.GetCustomAttribute<FirestorePropertyAttribute>().Name ?? exp.Member.Name;
-            while (exp.Expression != null && exp.Expression.NodeType == ExpressionType.MemberAccess)
-            {
-                exp = exp.Expression as MemberExpression;
-                var memberName = exp.Member.GetCustomAttribute<FirestorePropertyAttribute>().Name ?? exp.Member.Name;
-                path = memberName + "." + path;
-            }
-            return path;
-        }
-
-        static object GetExpressionValue(Expression expression)
-        {
-            if (expression.NodeType == ExpressionType.Constant)
-            {
-                return (expression as ConstantExpression).Value;
-            }
-            else if (expression.NodeType == ExpressionType.MemberAccess && ((MemberExpression)expression).Member is FieldInfo)
-            {
-                var memberAccessExpr = expression as MemberExpression;
-                if (memberAccessExpr.Expression is ConstantExpression constantAccessExpr)
-                {
-                    var innerMemberName = memberAccessExpr.Member.Name;
-                    var compiledLambdaScopeField = constantAccessExpr.Value.GetType().GetField(innerMemberName);
-                    return compiledLambdaScopeField.GetValue(constantAccessExpr.Value);
-                }
-            }
-            else if (expression.NodeType == ExpressionType.MemberAccess)
-                throw new NotSupportedException(FirestoreDontSupportMsg);
-
-            return null;
         }
     }
 }
