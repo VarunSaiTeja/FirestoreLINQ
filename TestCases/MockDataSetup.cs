@@ -29,7 +29,7 @@ namespace TestCases
             Console.WriteLine(MockData.Students.Count);
             foreach (var student in MockData.Students)
             {
-                var rs = _db.firestoreDb.Collection<Student>().AddAsync(student).Result;
+                var rs = _db.firestoreDb.Collection<Student>().Document(student.Id).SetAsync(student).Result;
                 Assert.NotNull(rs);
             }
         }
