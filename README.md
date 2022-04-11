@@ -29,6 +29,19 @@ public class Student
 
     [FirestoreProperty]
     public int Age { get; set; }
+    
+    [FirestoreProperty]
+    public AddressInfo Address { get; set; }
+    
+    [FirestoreData]
+    public class AddressInfo
+    {
+        [FirestoreProperty]
+        public string City { get; set; }
+
+        [FirestoreProperty]
+        public string Country { get; set; }
+    }
 }
 ````
 
@@ -55,6 +68,17 @@ public class QueryTest
         var youngersTranslated = db.Collection("Students")
                                    .WhereGreaterThanOrEqualTo("Age", 15)
                                    .WhereLessThanOrEqualTo("Age", 25)
+                                   .Select(x=> x.ConvertTo<Student>())
+                                   .ToList();
+        
+        
+        
+        var indians = db.AsQuerable<Student>()
+                        .Where(s => s.Address.Country == "India").ToList();
+        
+        //Above LINQ Expression will be executed in form of following firestore query
+        var indiansTranslated = db.Collection("Students")
+                                   .WhereEqualTo("Address.Country", "India")
                                    .Select(x=> x.ConvertTo<Student>())
                                    .ToList();
     }
