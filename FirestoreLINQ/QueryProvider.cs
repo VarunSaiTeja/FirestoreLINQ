@@ -52,10 +52,11 @@ namespace FirestoreLINQ
                             var snapResult = GetResult();
                             return (TResult)(object)snapResult.Any();
                         }
-                    case "Average" or "Sum":
+                    case "Average":
                         {
                             var snapResult = GetResult();
-                            return GenericAggregator<TResult>.Aggregate(snapResult, me.Name);
+                            var items = snapResult.Select(x => x.ConvertTo<Dictionary<string, TResult>>().Values.First()).ToList();
+                            return GenericAggregator<TResult>.Average(items);
                         }
                     case "Count":
                         {
@@ -107,6 +108,12 @@ namespace FirestoreLINQ
                             query = query.Limit(2);
                             var snapResult = GetResult();
                             return snapResult.Any() ? snapResult.SingleOrDefault().ConvertTo<TResult>() : default;
+                        }
+                    case "Sum":
+                        {
+                            var snapResult = GetResult();
+                            var items = snapResult.Select(x => x.ConvertTo<Dictionary<string, TResult>>().Values.First()).ToList();
+                            return GenericAggregator<TResult>.Sum(items);
                         }
                     default:
                         break;
