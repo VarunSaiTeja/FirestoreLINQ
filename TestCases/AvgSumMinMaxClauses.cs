@@ -23,7 +23,7 @@ namespace TestCases
         public void Min()
         {
             var age = students.Min(x => x.Age);
-            var mockResult = students.Min(x => x.Age);
+            var mockResult = MockData.Students.Min(x => x.Age);
 
             Assert.Equal(mockResult, age);
         }
@@ -52,7 +52,7 @@ namespace TestCases
         public void Max()
         {
             var age = students.Max(x => x.Age);
-            var mockResult = students.Max(x => x.Age);
+            var mockResult = MockData.Students.Max(x => x.Age);
 
             Assert.Equal(mockResult, age);
         }
@@ -61,7 +61,7 @@ namespace TestCases
         public void Min_FollowedByWhere()
         {
             var age = students.Where(x => x.LastName == "Teja").Min(x => x.Age);
-            var mockResult = students.Where(x => x.LastName == "Teja").Min(x => x.Age);
+            var mockResult = MockData.Students.Where(x => x.LastName == "Teja").Min(x => x.Age);
 
             Assert.Equal(mockResult, age);
         }
@@ -70,7 +70,7 @@ namespace TestCases
         public void Max_FollowedByWhere()
         {
             var age = students.Where(x => x.LastName == "Darisi").Max(x => x.Age);
-            var mockResult = students.Where(x => x.LastName == "Darisi").Max(x => x.Age);
+            var mockResult = MockData.Students.Where(x => x.LastName == "Darisi").Max(x => x.Age);
 
             Assert.Equal(mockResult, age);
         }
@@ -79,7 +79,7 @@ namespace TestCases
         public void MinBy()
         {
             var student = students.MinBy(x => x.Age);
-            var mockResult = students.MinBy(x => x.Age);
+            var mockResult = MockData.Students.MinBy(x => x.Age);
 
             Assert.Equal(mockResult.FirstName, student.FirstName);
         }
@@ -88,7 +88,7 @@ namespace TestCases
         public void MinBy_FollowedByWhere()
         {
             var student = students.Where(x => x.LastName == "Teja").MinBy(x => x.Age);
-            var mockResult = students.Where(x => x.LastName == "Teja").MinBy(x => x.Age);
+            var mockResult = MockData.Students.Where(x => x.LastName == "Teja").MinBy(x => x.Age);
 
             Assert.Equal(mockResult.FirstName, student.FirstName);
         }
@@ -97,7 +97,7 @@ namespace TestCases
         public void MaxBy_FollowedByWhere()
         {
             var student = students.Where(x => x.LastName == "Teja").MaxBy(x => x.Age);
-            var mockResult = students.Where(x => x.LastName == "Teja").MaxBy(x => x.Age);
+            var mockResult = MockData.Students.Where(x => x.LastName == "Teja").MaxBy(x => x.Age);
 
             Assert.Equal(mockResult.FirstName, student.FirstName);
         }
@@ -106,7 +106,7 @@ namespace TestCases
         public void MaxBy()
         {
             var student = students.MaxBy(x => x.Age);
-            var mockResult = students.MaxBy(x => x.Age);
+            var mockResult = MockData.Students.MaxBy(x => x.Age);
 
             Assert.Equal(mockResult.FirstName, student.FirstName);
         }
@@ -115,7 +115,7 @@ namespace TestCases
         public void Average()
         {
             var avg = students.Average(x => x.Age);
-            var mockResult = students.Average(x => x.Age);
+            var mockResult = MockData.Students.Average(x => x.Age);
             Assert.Equal(mockResult, avg);
         }
 
@@ -123,7 +123,7 @@ namespace TestCases
         public void Average_FollowedByWhere()
         {
             var avg = students.Where(x => x.LastName == "Teja").Average(x => x.Age);
-            var mockResult = students.Where(x => x.LastName == "Teja").Average(x => x.Age);
+            var mockResult = MockData.Students.Where(x => x.LastName == "Teja").Average(x => x.Age);
 
             Assert.Equal(mockResult, avg);
         }
@@ -132,7 +132,7 @@ namespace TestCases
         public void Sum()
         {
             var sum = students.Sum(x => x.Age);
-            var mockResult = students.Sum(x => x.Age);
+            var mockResult = MockData.Students.Sum(x => x.Age);
 
             Assert.Equal(mockResult, sum);
         }
@@ -141,7 +141,7 @@ namespace TestCases
         public void Sum_FollowedByWhere()
         {
             var sum = students.Where(x => x.LastName == "Teja").Sum(x => x.Age);
-            var mockResult = students.Where(x => x.LastName == "Teja").Sum(x => x.Age);
+            var mockResult = MockData.Students.Where(x => x.LastName == "Teja").Sum(x => x.Age);
 
             Assert.Equal(mockResult, sum);
         }
