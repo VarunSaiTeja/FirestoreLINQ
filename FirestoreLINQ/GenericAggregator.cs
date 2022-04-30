@@ -4,18 +4,25 @@ namespace FirestoreLINQ
 {
     internal partial class QueryProvider
     {
-        public class GenericAggregator<T>
+        public static class GenericAggregator<T>
         {
-            public static T Sum(List<T> items)
+            static Func<T, T, T> GetAdder()
             {
-                var expType1 = Expression.Parameter(typeof(T), "x");
-                var expType2 = Expression.Parameter(typeof(T), "y");
-                T result = default;
+                var exp1 = Expression.Parameter(typeof(T), "x");
+                var exp2 = Expression.Parameter(typeof(T), "y");
 
                 Func<T, T, T> adder;
                 adder = (Func<T, T, T>)Expression
-                    .Lambda(Expression.Add(expType1, expType2), expType1, expType2)
+                    .Lambda(Expression.Add(exp1, exp2), exp1, exp2)
                     .Compile();
+
+                return adder;
+            }
+
+            public static T Sum(List<T> items)
+            {
+                Func<T, T, T> adder = GetAdder();
+                T result = default;
 
                 foreach (var item in items)
                 {
@@ -26,14 +33,14 @@ namespace FirestoreLINQ
 
             public static T Average(List<T> items)
             {
-                var expType1 = Expression.Parameter(typeof(T), "x");
-                var expType2 = Expression.Parameter(typeof(T), "y");
-
                 var sumResult = Sum(items);
+
                 Func<T, T, T> divider;
+                var exp1 = Expression.Parameter(typeof(T), "x");
+                var exp2 = Expression.Parameter(typeof(T), "y");
 
                 divider = (Func<T, T, T>)Expression
-                    .Lambda(Expression.Divide(expType1, expType2), expType1, expType2)
+                    .Lambda(Expression.Divide(exp1, exp2), exp1, exp2)
                     .Compile();
 
                 var itemsCount = (T)Convert.ChangeType(items.Count, typeof(T));
