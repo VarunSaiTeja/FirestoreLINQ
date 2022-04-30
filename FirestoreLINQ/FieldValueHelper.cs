@@ -108,6 +108,9 @@ namespace FirestoreLINQ
 
         internal static object GetExpressionValue(this Expression expression)
         {
+            if (expression.NodeType == ExpressionType.Convert)
+                expression = (expression as UnaryExpression).Operand;
+
             if (expression.NodeType == ExpressionType.Constant)
             {
                 return (expression as ConstantExpression).Value;
